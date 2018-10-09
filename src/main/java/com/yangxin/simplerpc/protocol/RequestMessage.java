@@ -1,6 +1,7 @@
-package com.yangxin.simplerpc.core;
+package com.yangxin.simplerpc.protocol;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +15,8 @@ public class RequestMessage implements Serializable, Request {
 
     private static final long serialVersionUID = 18511803622L;
 
-    private Long requestId;
-    private String interfaceName;
+    private String requestId;
+    private String className;
     private String methodName;
     private Object[] arguments;
     private Class<?>[] parameterTypes;
@@ -24,21 +25,34 @@ public class RequestMessage implements Serializable, Request {
     private Map<String, String> attachments;
 
     @Override
-    public Long getRequestId() {
+    public String getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(Long requestId) {
+    public void setRequestId(String requestId) {
         this.requestId = requestId;
     }
 
     @Override
-    public String getInterfaceName() {
-        return interfaceName;
+    public String getClassName() {
+        return className;
     }
 
-    public void setInterfaceName(String interfaceName) {
-        this.interfaceName = interfaceName;
+    @Override
+    public String toString() {
+        return "RequestMessage{" +
+                "requestId='" + requestId + '\'' +
+                ", className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", arguments=" + Arrays.toString(arguments) +
+                ", parameterTypes=" + Arrays.toString(parameterTypes) +
+                ", type=" + type +
+                ", attachments=" + attachments +
+                '}';
+    }
+
+    public void setClassName(String className) {
+        this.className= className;
     }
 
     @Override
@@ -61,7 +75,7 @@ public class RequestMessage implements Serializable, Request {
 
     @Override
     public Class<?>[] getParameterTypes() {
-        return parameterTypes;
+        return this.parameterTypes;
     }
 
     public void setParameterTypes(Class<?>[] parameterTypes) {

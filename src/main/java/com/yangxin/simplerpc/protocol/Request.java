@@ -1,4 +1,4 @@
-package com.yangxin.simplerpc.core;
+package com.yangxin.simplerpc.protocol;
 
 import java.util.Map;
 
@@ -9,9 +9,9 @@ import java.util.Map;
  */
 public interface Request {
 
-    Long getRequestId();
+    String getRequestId();
 
-    String getInterfaceName();
+    String getClassName();
 
     String getMethodName();
 

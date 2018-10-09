@@ -4,6 +4,8 @@ import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
+import org.objenesis.Objenesis;
+import org.objenesis.ObjenesisStd;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,6 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ProtostuffUtil {
 
     private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();
+
+    private static Objenesis objenesis = new ObjenesisStd(true);
 
     private static <T> Schema<T> getSchema(Class<T> clazz) {
         @SuppressWarnings("unchecked")
@@ -50,7 +54,7 @@ public class ProtostuffUtil {
 
     public static <T> T deserializer(byte[] data, Class<T> clazz) {
         try {
-            T obj = clazz.getDeclaredConstructor().newInstance();
+            T obj = objenesis.newInstance(clazz);
             Schema<T> schema = getSchema(clazz);
             ProtostuffIOUtil.mergeFrom(data, obj, schema);
             return obj;

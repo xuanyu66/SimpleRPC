@@ -1,4 +1,4 @@
-package com.yangxin.simplerpc.core;
+package com.yangxin.simplerpc.protocol;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -14,29 +14,29 @@ public class ResponseMessage implements Response, Serializable {
 
     private static final long serialVersionUID = 18311317304L;
 
-    private Long requestId;
-    private Exception exception;
+    private String requestId;
+    private Throwable throwable;
     private Object result;
     private Map<String, String> attachments;
 
     private long processTime;
 
     @Override
-    public Long getRequestId() {
+    public String getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(Long requestId) {
+    public void setRequestId(String requestId) {
         this.requestId = requestId;
     }
 
     @Override
-    public Exception getException() {
-        return exception;
+    public Throwable getThrowable() {
+        return throwable;
     }
 
-    public void setException(Exception exception) {
-        this.exception = exception;
+    public void setThrowable(Throwable throwable) {
+        this.throwable = throwable;
     }
 
     @Override
@@ -83,5 +83,17 @@ public class ResponseMessage implements Response, Serializable {
 
     public long getProcessTime() {
         return processTime;
+    }
+
+
+    @Override
+    public String toString() {
+        return "ResponseMessage{" +
+                "requestId='" + requestId + '\'' +
+                ", throwable=" + throwable +
+                ", result=" + result +
+                ", attachments=" + attachments +
+                ", processTime=" + processTime +
+                '}';
     }
 }
