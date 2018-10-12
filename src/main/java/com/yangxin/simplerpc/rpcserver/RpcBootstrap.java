@@ -1,4 +1,4 @@
-package com.yangxin.simplerpc.provider;
+package com.yangxin.simplerpc.rpcserver;
 
 
 import org.apache.log4j.PropertyConfigurator;

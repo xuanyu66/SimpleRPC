@@ -7,7 +7,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.yangxin.simplerpc.provider.Constant;
 import org.apache.log4j.Logger;
 
 /**
@@ -24,10 +23,10 @@ public class CustomThreadPoolExecutor {
 	private ThreadPoolExecutor poolExecutor = null;
 	
 	public CustomThreadPoolExecutor init() {
-		poolExecutor = new ThreadPoolExecutor(Constant.THREADPOOL_COREPOOLSIZE,
-				Constant.THREADPOOL_MAXINUMPOOLSIZE, 
-				Constant.KEEPALIVE_TIME, TimeUnit.MINUTES, 
-				new ArrayBlockingQueue<>(Constant.BLOCKINGQUEQUE_SIZE),
+		poolExecutor = new ThreadPoolExecutor(Constant.THREAD_POOL_CORE_POOL_SIZE,
+				Constant.THREAD_POOL_MAXIMUM_POOL_SIZE,
+				Constant.KEEP_ALIVE_TIME, TimeUnit.MINUTES,
+				new ArrayBlockingQueue<>(Constant.BLOCKING_QUEUE_SIZE),
 				new CustomThreadFactory(),
 				new CustomRejectedExecutionHandler());
 		return this;

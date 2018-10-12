@@ -12,7 +12,7 @@
 
 
 
-    <bean id="serviceRegistry" class="com.yangxin.simplerpc.provider.ServiceRegistry">
+    <bean id="serviceRegistry" class="com.yangxin.simplerpc.rpcserver.ServiceRegistry">
         <constructor-arg name="registryAddress" value="${registry.address}"/>
     </bean>
 

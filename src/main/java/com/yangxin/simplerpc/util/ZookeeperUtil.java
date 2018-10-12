@@ -1,6 +1,5 @@
 package com.yangxin.simplerpc.util;
 
-import com.yangxin.simplerpc.provider.Constant;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;

@@ -1,9 +1,7 @@
-package com.yangxin.simplerpc.util;
+package com.yangxin.simplerpc.rpcclient;
 
 import com.yangxin.simplerpc.protocol.RequestMessage;
 import com.yangxin.simplerpc.protocol.ResponseMessage;
-import com.yangxin.simplerpc.provider.ServiceDiscovery;
-import com.yangxin.simplerpc.rpcclient.RpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +22,7 @@ public class RpcProxy {
     private String serverAdderss;
     private ServiceDiscovery serviceDiscovery;
 
-    public RpcClient client;
+    public RpcClientHandler client;
 
     public RpcProxy(ServiceDiscovery serviceDiscovery) {
         this.serviceDiscovery = serviceDiscovery;
@@ -56,7 +54,7 @@ public class RpcProxy {
                         String host = array[0];
                         int port = Integer.parseInt(array[1]);
                         if (client == null){
-                            client = new RpcClient(host, port);
+                            client = new RpcClientHandler(host, port);
                         }
 
                         ResponseMessage response = client.send(request);

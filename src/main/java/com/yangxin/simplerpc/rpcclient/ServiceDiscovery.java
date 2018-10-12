@@ -1,5 +1,6 @@
-package com.yangxin.simplerpc.provider;
+package com.yangxin.simplerpc.rpcclient;
 
+import com.yangxin.simplerpc.util.Constant;
 import com.yangxin.simplerpc.util.ZookeeperUtil;
 import io.netty.util.internal.ThreadLocalRandom;
 import org.apache.zookeeper.KeeperException;

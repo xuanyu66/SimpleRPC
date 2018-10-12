@@ -1,5 +1,6 @@
-package com.yangxin.simplerpc.provider;
+package com.yangxin.simplerpc.rpcserver;
 
+import com.yangxin.simplerpc.util.Constant;
 import com.yangxin.simplerpc.util.ZookeeperUtil;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;

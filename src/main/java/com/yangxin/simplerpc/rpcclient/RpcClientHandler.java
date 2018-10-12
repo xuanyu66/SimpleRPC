@@ -19,20 +19,22 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  * @Description:
  */
-public class RpcClient extends SimpleChannelInboundHandler<ResponseMessage> {
+public class RpcClientHandler extends SimpleChannelInboundHandler<ResponseMessage> {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(RpcClient.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(RpcClientHandler.class);
 
     private String host;
     private int port;
 
     private ResponseMessage response;
+
+
     private volatile Channel channel;
     private EventLoopGroup group;
 
     private final Object obj = new Object();
 
-    public RpcClient(String host, int port) {
+    public RpcClientHandler(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -71,15 +73,12 @@ public class RpcClient extends SimpleChannelInboundHandler<ResponseMessage> {
                                     .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0))
                                     .addLast(new ProtostuffEncoder(RequestMessage.class))
                                     .addLast(new ProtostuffDecoder(ResponseMessage.class))
-                                    .addLast(RpcClient.this);
+                                    .addLast(RpcClientHandler.this);
                         }
                     })
                     .option(ChannelOption.SO_KEEPALIVE, true);
 
-            ChannelFuture future = bootstrap.connect(host, port).sync();
-
-
-
+            bootstrap.connect(host, port).sync();
         }
 
         channel.writeAndFlush(request).sync();
@@ -96,4 +95,9 @@ public class RpcClient extends SimpleChannelInboundHandler<ResponseMessage> {
         group.shutdownGracefully();
         LOGGER.info("channel and EventLoopGroup stopped.");
     }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
 }

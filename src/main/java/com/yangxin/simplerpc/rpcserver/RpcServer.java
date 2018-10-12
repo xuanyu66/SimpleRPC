@@ -4,7 +4,6 @@ import com.yangxin.simplerpc.coder.ProtostuffDecoder;
 import com.yangxin.simplerpc.coder.ProtostuffEncoder;
 import com.yangxin.simplerpc.protocol.RequestMessage;
 import com.yangxin.simplerpc.protocol.ResponseMessage;
-import com.yangxin.simplerpc.provider.ServiceRegistry;
 import com.yangxin.simplerpc.service.RpcService;
 import com.yangxin.simplerpc.util.CustomThreadPoolExecutor;
 import io.netty.bootstrap.ServerBootstrap;
@@ -90,7 +89,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                                         .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0))
                                         .addLast(new ProtostuffDecoder(RequestMessage.class))
                                         .addLast(new ProtostuffEncoder(ResponseMessage.class))
-                                        .addLast(new RpcHandler(handlerMap));
+                                        .addLast(new RpcServerHandler(handlerMap));
                             }
                         })
                         .option(ChannelOption.SO_BACKLOG, 128)

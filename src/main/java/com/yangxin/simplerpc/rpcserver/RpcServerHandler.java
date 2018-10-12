@@ -21,14 +21,14 @@ import java.util.Map;
  * @version 1.0
  * @Description:
  */
-public class RpcHandler extends SimpleChannelInboundHandler<RequestMessage> {
+public class RpcServerHandler extends SimpleChannelInboundHandler<RequestMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RpcHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RpcServerHandler.class);
 
 
     private final Map<String, Object> handlerMap;
 
-    public RpcHandler(Map<String, Object> handlerMap) {
+    public RpcServerHandler(Map<String, Object> handlerMap) {
         this.handlerMap = handlerMap;
     }
 

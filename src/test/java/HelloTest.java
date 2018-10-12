@@ -1,13 +1,7 @@
 import com.yangxin.simplerpc.service.HelloService;
-import com.yangxin.simplerpc.util.RpcProxy;
+import com.yangxin.simplerpc.rpcclient.RpcProxy;
 import org.apache.log4j.PropertyConfigurator;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericXmlApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * @author leon on 2018/9/28.
@@ -33,9 +27,9 @@ public class HelloTest {
         String result1 = helloService.hello("bob");
         System.out.println("*******************" + result1);
         System.out.println("down");
+        System.out.println(rpcProxy.client.getChannel().remoteAddress());
         rpcProxy.client.close();
-//        System.out.println(rpcProxy.client.toString());
-//        System.out.println(rpcProxy.client.toString());
+
     }
 
 }
