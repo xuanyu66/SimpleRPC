@@ -21,17 +21,28 @@ public class CustomThreadPoolExecutor {
 	private static Logger LOGGER = Logger.getLogger(CustomThreadPoolExecutor.class);
 	
 	private ThreadPoolExecutor poolExecutor = null;
-	
-	public CustomThreadPoolExecutor init() {
-		poolExecutor = new ThreadPoolExecutor(Constant.THREAD_POOL_CORE_POOL_SIZE,
+	private String poolName = CustomThreadPoolExecutor.class.getSimpleName();
+
+
+	public ThreadPoolExecutor init() {
+		return new ThreadPoolExecutor(Constant.THREAD_POOL_CORE_POOL_SIZE,
 				Constant.THREAD_POOL_MAXIMUM_POOL_SIZE,
 				Constant.KEEP_ALIVE_TIME, TimeUnit.MINUTES,
 				new ArrayBlockingQueue<>(Constant.BLOCKING_QUEUE_SIZE),
 				new CustomThreadFactory(),
 				new CustomRejectedExecutionHandler());
-		return this;
+
 	}
-	
+
+	public CustomThreadPoolExecutor() {
+		init();
+	}
+
+	public CustomThreadPoolExecutor(String poolName) {
+		this.poolName = poolName;
+		poolExecutor = init();
+	}
+
 	public void destory() {
 		if (poolExecutor != null) {
 			poolExecutor.shutdownNow();
@@ -48,8 +59,8 @@ public class CustomThreadPoolExecutor {
 		@Override
 		public Thread newThread(Runnable r) {
 			Thread t = new Thread(r);
-			String ThreadName = CustomThreadPoolExecutor.class.getSimpleName() + count.addAndGet(1);
-			t.setName(ThreadName);
+			String threadName = poolName + count.addAndGet(1);
+			t.setName(threadName);
 			return t;
 		}
 		

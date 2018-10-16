@@ -16,7 +16,7 @@
     </bean>
 
 
-    <bean id="rpcProxy" class="com.yangxin.simplerpc.rpcclient.RpcProxy">
+    <bean id="rpcClient" class="com.yangxin.simplerpc.rpcclient.RpcClient">
         <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
     </bean>
 

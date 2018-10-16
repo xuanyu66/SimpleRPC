@@ -19,6 +19,7 @@ public class RpcClientChannelInitializer extends ChannelInitializer<SocketChanne
         socketChannel.pipeline()
                 .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0))
                 .addLast(new ProtostuffEncoder(RequestMessage.class))
-                .addLast(new ProtostuffDecoder(ResponseMessage.class));
+                .addLast(new ProtostuffDecoder(ResponseMessage.class))
+                .addLast(new RpcClientHandler());
     }
 }

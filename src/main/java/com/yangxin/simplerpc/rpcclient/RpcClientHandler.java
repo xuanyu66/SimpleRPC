@@ -14,6 +14,10 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.SocketAddress;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+
 /**
  * @author leon on 2018/9/28.
  * @version 1.0
@@ -23,20 +27,20 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<ResponseMessag
 
     public static final Logger LOGGER = LoggerFactory.getLogger(RpcClientHandler.class);
 
-    private String host;
-    private int port;
-
-    private ResponseMessage response;
-
-
+    private SocketAddress remoteAddress;
     private volatile Channel channel;
     private EventLoopGroup group;
 
-    private final Object obj = new Object();
+    private ConcurrentHashMap<String, RpcFuture> pendingRPC = new ConcurrentHashMap<>();
 
-    public RpcClientHandler(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public SocketAddress getRemoteAddress() {
+        return remoteAddress;
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        this.remoteAddress = this.channel.remoteAddress();
     }
 
     @Override
@@ -47,10 +51,12 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<ResponseMessag
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ResponseMessage response) throws Exception {
-        this.response = response;
+        String requsetId = response.getRequestId();
+        RpcFuture rpcFuture = pendingRPC.get(requsetId);
 
-        synchronized (obj) {
-            obj.notifyAll();
+        if (rpcFuture != null) {
+            pendingRPC.remove(requsetId);
+            rpcFuture.done(response);
         }
     }
 
@@ -60,39 +66,27 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<ResponseMessag
         ctx.close();
     }
 
-
-    public ResponseMessage send(RequestMessage request) throws Exception{
-        if (group == null) {
-            group = new NioEventLoopGroup();
-            Bootstrap bootstrap = new Bootstrap();
-            bootstrap.group(group).channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline()
-                                    .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0))
-                                    .addLast(new ProtostuffEncoder(RequestMessage.class))
-                                    .addLast(new ProtostuffDecoder(ResponseMessage.class))
-                                    .addLast(RpcClientHandler.this);
-                        }
-                    })
-                    .option(ChannelOption.SO_KEEPALIVE, true);
-
-            bootstrap.connect(host, port).sync();
+    public RpcFuture sendRequest(RequestMessage request) {
+        final CountDownLatch latch = new CountDownLatch(1);
+        RpcFuture rpcFuture = new RpcFuture(request);
+        pendingRPC.put(request.getRequestId(), rpcFuture);
+        channel.writeAndFlush(request).addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) {
+                latch.countDown();
+            }
+        });
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            LOGGER.error("{}", e);
         }
 
-        channel.writeAndFlush(request).sync();
-
-        synchronized (obj){
-            obj.wait();
-        }
-
-        return response;
+        return rpcFuture;
     }
 
     public void close() {
         channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
-        group.shutdownGracefully();
         LOGGER.info("channel and EventLoopGroup stopped.");
     }
 

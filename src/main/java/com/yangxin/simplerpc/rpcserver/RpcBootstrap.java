@@ -17,8 +17,6 @@ public class RpcBootstrap {
 
     public static void main(String[] args) {
 
-
-        PropertyConfigurator.configure("src/log4j.properties");
         GenericXmlApplicationContext ac = new GenericXmlApplicationContext();
         ac.setValidating(false);
         ac.load("classpath:spring.xml");

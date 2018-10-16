@@ -56,7 +56,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
     }
 
     private static class ThreadPoolHolder{
-        private static final ThreadPoolExecutor threadPoolExecutor = new CustomThreadPoolExecutor().init().getCustomThreadPoolExecutor();
+        private static final ThreadPoolExecutor threadPoolExecutor = new CustomThreadPoolExecutor("RpcServer").getCustomThreadPoolExecutor();
     }
 
     public static ThreadPoolExecutor getThreadPoll() {

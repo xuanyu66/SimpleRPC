@@ -29,13 +29,13 @@ public class ProtostuffDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
-        LOGGER.info("decode");
+        LOGGER.debug("decode");
         if (byteBuf.readableBytes() < 4) {
             return;
         }
         byteBuf.markReaderIndex();
         int dataLength = byteBuf.readInt();
-        LOGGER.info("dataleg: {}", dataLength);
+        LOGGER.debug("dataleg: {}", dataLength);
 
         if (dataLength < 0) {
             channelHandlerContext.close();
@@ -46,7 +46,7 @@ public class ProtostuffDecoder extends ByteToMessageDecoder {
         byte[] data = new byte[dataLength];
         byteBuf.readBytes(data);
         Object obj = ProtostuffUtil.deserializer(data, genericClass);
-        LOGGER.info("channelRead: {}", obj.toString());;
+        LOGGER.debug("channelRead: {}", obj.toString());;
 
         list.add(obj);
     }

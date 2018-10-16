@@ -27,15 +27,16 @@ public class ServiceDiscovery {
 
     private volatile List<String> dataList = new ArrayList<>();
 
+    private ZooKeeper zookeeper;
     private String registryAddress;
 
 
     public ServiceDiscovery(String registryAddress) {
         this.registryAddress = registryAddress;
 
-        ZooKeeper zk = connectServer();
-        if (zk != null) {
-            watchNode(zk);
+        zookeeper = connectServer();
+        if (zookeeper != null) {
+            watchNode(zookeeper);
         }
     }
 
@@ -77,8 +78,25 @@ public class ServiceDiscovery {
             }
             LOGGER.debug("node data: {}", dataList);
             this.dataList = dataList;
+            LOGGER.debug("Service discovery triggered updating connected server node.");
+            UpdateConnectedServer();
         }catch (KeeperException | InterruptedException e) {
             LOGGER.error("", e);
+        }
+    }
+
+
+    private void UpdateConnectedServer() {
+        ConnectionManager.getConnectionMananger().updateConnectedServer(this.dataList);
+    }
+
+    public void stop(){
+        if(zookeeper!=null){
+            try {
+                zookeeper.close();
+            } catch (InterruptedException e) {
+                LOGGER.error("", e);
+            }
         }
     }
 }

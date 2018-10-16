@@ -15,4 +15,5 @@ public interface Constant {
     int THREAD_POOL_MAXIMUM_POOL_SIZE = 3 * Runtime.getRuntime().availableProcessors() + 1;
     int KEEP_ALIVE_TIME = 3;
     int BLOCKING_QUEUE_SIZE = 500;
+
 }
