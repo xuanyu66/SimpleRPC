@@ -34,10 +34,6 @@ public class CustomThreadPoolExecutor {
 
 	}
 
-	public CustomThreadPoolExecutor() {
-		init();
-	}
-
 	public CustomThreadPoolExecutor(String poolName) {
 		this.poolName = poolName;
 		poolExecutor = init();
